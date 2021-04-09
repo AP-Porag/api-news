@@ -1,73 +1,72 @@
 <template>
-  <div class="container">
-    <div>
-      <Logo />
-      <h1 class="title">
-        api-news
-      </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
+  <div class="main">
+    <LatestNewsSection/>
+    <BlockNewsSection/>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <img src="~assets/images/default/ad_728-90-3.png" alt="" class="img-fluid" width="100%">
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8">
+          <h4>Exclusive News</h4>
+          <div class="exclusive_news_section">
+            <div class="row">
+              <LazyExclusiveNewsSection
+                class="pb-4"
+                v-for="(news,index) in articles"
+                :key="index"
+                :news="news"
+                v-if="news.description != null"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data(){
+    return{
+      search:'',
+      searchCountry:'',
+      articles:[],
+      API_KEY:'a2218caa8a904f239f3d9f111958b1f1',
+      category:'entertainment',
+      endpoint:'top-headlines',
+      country:'us',
+      loading:false,
+      url:'https://newsapi.org/v2/'
+
+    }
+  },
+  computed:{
+    getArticles(){
+      let url=this.url+this.endpoint+'?country='+this.country+'&category='+this.category+'&apiKey='+this.API_KEY;
+      console.log('API URL => '+url)
+      fetch(url)
+        .then(response => response.json())
+        .then(result => {
+          console.log(result)
+          this.articles = result.articles
+        })
+
+    },
+  },
+  methods:{
+
+  }
+}
+
 </script>
 
 <style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
 
-.title {
-  font-family:
-    'Quicksand',
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
 </style>
